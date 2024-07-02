@@ -1,0 +1,61 @@
+		Project_4: Jenkins pipeline_4 (python)
+
+	developers --->push--> Git hub --->pull-->Jenkins -->pipeline -> build --> webserver (Apache)
+
+1. Installing Apache server in webserver and configuring to host python-ased webpage
+		#yum -y install httpd mod_wsgi 									--> install
+		#systemctl start httpd										--> service start
+		#systemctl enable httpd										--> service enable for startup
+		#firewall-cmd 	--permanent		--add-service=http			--> adding http port in firewall
+		#firewall-cmd 	--reload										
+		
+	- Configuring webserver for python-based webpage
+		#cd /etc/httpd/conf.d
+		#ls
+		#vi python.conf
+			<VirtualHost *:80>
+			WSGIScriptAlias	/	/var/www/html/index.wsgi
+			</VirtualHost>
+		#systemctl reload httpd
+
+2. creating new repo in github for our python-based website 
+		- login to github 
+			--> create repo mypython
+			--> copy url
+		- power on developers machine
+		- create folder for your project
+		#mkdir -p /root/projcect/pythonweb 		--> project workspace
+		#cd /root/project/pythonweb
+			-vi index.wsgi
+				Write the conetent of your website
+		#git init		--> creating local repo
+		#git remote add origin <your repo url>
+		#git pull origin master
+		#git add -A
+		#git commmit -m "pythonweb first commit"
+		#git push origin master
+	
+3. Createing a job in jenkins to pull index.wsgi from github repo. and send it to the webserver into /var/www/html directory
+		-jenkins dashboard
+			- New items (new jobs)
+				-name your freestyle project
+			- Git : repo url -->username
+			- Build Trigger : Poll SCM --> * * * * *
+			- post build Action
+				-Send build artifact over ssh
+					-- ssh server : web server(Select server name)
+					-- Soruce file: **/*	(or index.wsgi)			--> to copy all files and folders recersively
+					-- remote directory: //var//www//html
+				-Apply --> Save
+
+				
+			
+	
+
+
+
+
+
+
+
+ 

@@ -1,0 +1,36 @@
+Installing Docker Engine
+power on: 
+	- Docker
+	- jmaster
+	- developer's
+
+1. Installing dependent packages (found in native repository of centos)
+	#yum -y install device-mapper-persistent-data lvm2
+	
+
+2. Installing Docker-ce package
+	#cd /etc/yum.repos.d
+	#wget https://download.docker.com/linux/centos/docker-ce.repo
+	
+	#yum list docker-ce
+	#yum -y install docker-ce
+	#systemctl start docker
+	
+3. Typical Docker command
+	#ping hub.docker.com
+     
+     - To show/list all the docker image of an application
+	#docker search <Image/ package name>
+	#docker search httpd
+	
+     - To view the list of downloaded docker application
+	#docker image ls
+	
+     - Location of locally downloaded docker images
+	#ls /var/lib/docker
+	#du -sh /var/lib/docker/*
+
+     - To download a docker image from docker hub
+	#docker image pull <image name/image tag>
+	
+	

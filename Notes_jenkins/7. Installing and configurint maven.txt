@@ -1,0 +1,81 @@
+		Installing and Configuring Maven
+Power On: 
+	jmaster (IP: 192.168.100.153)
+	slave macnines (if any)
+	
+ 
+1. Install Java
+	#yum -y install java-11-openjdk
+	#java -version
+	--> remove old version jdk (#yum -y remove package name) OR
+	--> Configure the alternative java version
+		#alternatives --config java 	--> Select your appropriate java 
+		#java -version
+
+3. Set JAVA_HOME variable path
+	#cd /usr/lib/jvm/java-11<tab>
+	#pwd --> copy the path
+	#vi /root/.bash_profile
+		JAVA_HOME=(paste the copied path)
+		PATH=$PATH:$HOME/bin:$JAVA_HOME
+	#. /root/.bash_profile OR 
+	#source /root/.bash_profile (to refresh)
+
+3. Intalling maven on jmaster (also slave if any, developers if needed)
+	#mkdir /opt
+	#cd /opt
+		--search the download link for maven binary.tar.gz
+		--copy the download link
+	#wget past link 		--> to download the binary files in current location
+	#tar -zxvf	apache-maven<tab>.tar.gz
+
+4. Set M2 and M2_HOME variable path
+	#cd /opt/apache-maven<tab>
+	#pwd --> copy the path
+	#vi /root/.bash_profile
+		M2_HOME=(paste the copied path)
+		M2=$M2_HOME
+		PATH=$PATH:$HOME/bin:$JAVA_HOME:$M2
+	#. /root/.bash_profile OR 
+	#source /root/.bash_profile (to refresh)
+	#echo $M2_HOME
+	#echo $M2
+	#echo $PATH
+	#mvn -version
+
+5. Installing plugin "maven invoker
+	--> Jenkins dashboard on Jmaster
+	-- manage Jenkins
+		-- manage plugins
+		-- Available 
+			search: Maven invoker
+		-- install without restart
+6. Specifying java home and maven home (JAVA_HOME and M2_HOME) path in jenkins
+	--> jenkins dashboard
+	-- manage jenkins
+		-- global tool configuration
+			-Add JDK
+				Name: Java
+				JAVA_HOME:/usr/lib/jvm/java-11.........
+				uncheck -install automatically
+			-Add Maven
+				Name: Maven
+				MAVEN_HOME:/opt/apache-maven-<version>
+				uncheck -install automatically
+			--> apply --> save
+
+7. Creating Java-based web application using maven (creating dependencies for java web app) --> (webserver - testing purpose, developer - project dependencies)
+	#mkdir -p /opt/mymaven
+	#cd /opt/mymaven
+		--> search a web app maven project (copy)
+		example: #mvn archetype:generate -DgroupId=com.javaweb -DartifactId=javaweb -DarchetypeArtifactId=maven-archetpe-webapp -DinteractiveMode=false
+	#paste (edit if needed)
+	#cd javaweb
+		-- push the project in github such that it can be pulled in developer machine latter on.
+	#ls
+		POM.xml 	--> project object model
+	#mvn compile 	--> to compile the code using maven, it must be compiled from the pathe having POM.xml
+	#mvn package 	--> packaging the webapp into war file (which will be deployed in application server)
+	#cd target	
+	#ls    		--> afer comple and package .war file will be created which is java-based web app artifact.
+

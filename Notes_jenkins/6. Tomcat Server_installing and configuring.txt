@@ -1,0 +1,76 @@
+		Installing and Configuring Tomcat Server
+Power On: Webserver (IP: 192.168.100.153)
+	- Tomcat is and application server
+ 
+1. Install Java
+	#yum -y install java-11-openjdk
+	#java -version
+	--> remove old version jdk (#yum -y remove package name) OR
+	--> Configure the alternative java version
+		#alternatives --config java 	--> Select your appropriate java 
+		#java -version
+	
+2. Set JAVA_HOME variable path
+	#cd /usr/lib/jvm/java-11<tab>
+	#pwd --> copy the path
+	#vi /root/.bash_profile
+		JAVA_HOME=(paste the copied path)
+		PATH=$PATH:$HOME/bin:$JAVA_HOME
+	#. /root/.bash_profile OR cd /opt
+	#source /root/.bash_profile (to refresh)
+
+3. Download apache-tomcat in the form of .tar.gz and extract it
+	- search the file and copy the location 
+	#mkdir /opt
+	#cd /opt
+	#wget <past the copied link>
+	#tar -zxvf <download file>.tar.gz
+	#cd /opt/apache-<tab>/binl
+	#ln -s /opt/apache-tomcat<tab>/bin/startup.sh /usr/local/bin/tomcatup 		-->creating soft link
+	#ln -s /opt/apache-tomcat<tab>/bin/shutdown.sh /usr/local/bin/tomcatdown	-->creating soft link
+	#echo $?			--> check status of last command worked or not (zero --> successfully execuded)
+
+4. Change the port of tomcat server to 8090
+	#cd /opt/apache-tomcat<tab>/conf
+	#ls
+	#vi server.xml
+		/connector port			--> search for port
+		-- modify to 8090			--> new port address
+			
+5. Allow the 8090 port in the firewall
+	#firewall-cmd --permanenet --add-port=8090/tcp
+	#firewall-cmd --reload
+	#firewall-cmd --list-all
+
+6. Allow access to the tomcat server from any/remote hosts
+	#cd /opt/apache-tomcat<tab>/webapp/host-manager/META-INF
+	#vi context.xml
+		/Valve	--> search for Valve
+		-- comment using  	<!-- 		-->
+		<!-- <Valve className= ............		-->
+
+	#cd /opt/apache-tomcat<tab>/webapp/manager/META-INF
+	#vi context.xml
+		/Valve	--> search for Valve
+		-- comment using  	<!-- 		-->
+		<!-- <Valve className= ............		-->
+	-- open browser (locally/ remotely)		--> testing the apache tomcat server
+		URL: 192.168.100.153:8090
+7. Now, setup credentials to login into 'Manager app'
+	#cd /opt/apache-tomcat<tab>/conf
+	#ls
+	#vi tomcat-users.xml
+		-- got to the bottom of the file but above </tomcat-users>
+
+		<role rolename="manager-gui"/>
+		<role rolename="manager-script"/>
+		<role rolename="manager-jmx"/>
+		<role rolename="manager-status"/>
+
+		<user username="tomcat" password="tomcat123" roles="manager-gui, manager-script,manager-jmx, manager-status"/>
+		<user username="deployer" password="deployer123" roles="manager-script"/>
+
+		-- save and exit
+8. Refresh the changes
+	#tomcatdown		--> script to shutdown the tomcat server
+	#tomcatup		--> script to start the tomcat server

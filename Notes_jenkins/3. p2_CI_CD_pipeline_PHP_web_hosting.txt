@@ -1,0 +1,54 @@
+		Project_2: Jenkins pipeline_2 (php)
+
+	developers --->push--> Git hub --->pull-->Jenkins -->pipeline - build --> webserver (Apache)
+
+1. Installing Apache server and php in webserver
+		#yum -y install httpd php 									--> install
+		#systemctl start httpd										--> service start
+		#systemctl enable httpd										--> service enable for startup
+		#firewall-cmd --permanent	--add-service=http					--> adding http port in firewall
+		#firewall-cmd --reload										
+
+2. creating new repo in github for our php project
+		- login to github 
+			--> create repo myphp
+			--> copy url
+		- power on developers machine
+		- create folder for your project
+		#mkdir -p /root/projcect/myphp  		--> project workspace
+		#cd /root/project/myphp
+		#git init						 --> creating local repo
+		#git remote add origin <your repo url>
+		#git pull origin master
+		#ls
+		#vi index.pp
+			Write your web content
+
+		#git add -A
+		#git commmit -m "myphp first commit"
+		#git push origin master
+	
+3. Createing a job in jenkins to pull index.html from github repo. and send it to the webserver into /var/www/html directory
+		-jenkins dashboard
+			- New items (new jobs)
+				-name your freestyle project
+			- Git : repo url -->username
+			- Build Trigger : Poll SCM --> * * * * *
+			- post build Action
+				-Send build artifact over ssh
+					-- ssh server : web server(Select server name)
+					-- Soruce file: index.php
+					-- remote directory: //var//www//html
+
+
+				
+			
+	
+
+
+
+
+
+
+
+ 

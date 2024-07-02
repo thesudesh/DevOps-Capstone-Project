@@ -1,0 +1,62 @@
+		Project_5: Jenkins pipeline_5 (MAVEN --> java based web app)
+
+	developers (Maven project) --->push--> Git hub --->pull-->Jenkins -->pipeline -> build (maven) --> webserver (tomcat)
+
+1. creating new repo in github for our java-based web website 
+		- login to github 
+			--> create repo maven1
+			--> copy url
+		- power on developers machine
+		- create folder for your project
+		#mkdir -p /root/projcect/maven1 		--> project workspace
+		#cd /root/project/maven1 
+		#git init		--> creating local repo
+		#git pull <any existing maven project>
+			- remove unnecessary files (if any)
+		#git remote add origin <your repo url>
+		#git pull origin master
+		#git add -A
+		#git commmit -m "maven java web app first commit"
+		#git push origin master
+
+2. Install "Deploy to container" plugin in the jenkins master
+	-jenkins dashboard
+		--> manage jenkins --> manage plugin
+		Available|installed --> search for "deploy to container"
+			-install without restart
+	#systemctl start chronyd				--> to sart (sync) NTP server
+	#systemctl enable chronyd
+
+3. Createing a job such that the jenkins master pulls code from github repository which then asks to buid (packages) and push the built artifact to the tomcat server
+		-jenkins dashboard
+			- New items (new jobs)
+				-name your freestyle project
+			- Git : repo url -->username
+			- Build Trigger : Poll SCM --> * * * * *
+			- Build:
+				- top level maven invoker
+				- maven
+				- package 			--> it compiles then packages the artifact (creates .war file)
+			- post build Action
+				- Deploy war/ear to a container
+					- WAR/EAR file: target/*.war				--> to deploy the artifact (.war file)
+					- Contest Path:
+					- Container: tomcat 8.xRemote 
+					- Credentials --> Add
+						- username: deployer
+						- deployer123
+						- select --> deployer/***
+				-Apply --> Save
+		
+		- Url: 192.168.100.153:8090/javaweb			--> to access the deployed web
+				
+			
+	
+
+
+
+
+
+
+
+ 

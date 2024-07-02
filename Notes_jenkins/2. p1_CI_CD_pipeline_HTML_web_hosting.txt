@@ -1,0 +1,98 @@
+		Project_1: Jenkins pipeline_1 (html)
+
+	developers --->push--> Git hub --->pull-->Jenkins -->pipeline - build --> webserver (Apache)
+
+1. Installing Apache server and php in webserver
+		#yum -y install httpd php 									--> install
+		#systemctl start httpd											--> service start
+		#systemctl enable httpd										--> service enable for startup
+		#firewall-cmd --permanent	 --add-service=http			--> adding http port in firewall
+		#firewall-cmd --reload										
+
+2. creating index.html file in /var/www/html of webserver
+		#vi /var/www/html/index.html
+				(add your code --> seve and exit)
+		- refresh your ip or hostname in your url 
+		# rm -f /var/www/html/index.html
+
+3. creating new repo in github for our html project
+		- login to github 
+			--> create repo myhtml
+			--> copy url
+		- power on developers machine
+		- create folder for your project
+		#mkdir -p /root/projcect/myhtml  --> project workspace
+		#cd /root/project/myhtml
+		#git init						 --> creating local repo
+		#git remote add origin git@github.com:meindraic/myhtml.git
+		#git pull origin master
+		#ls
+		#vi index.html
+			<h1>This is my first html website hosting</h1>
+		#git add -A
+		#git commmit -m "myhtml first commit"
+		#git push origin master
+	
+4. jenkins configuration for "Github" and "publish over ssh" 
+		- Plugins for Github
+		- publish over ssh
+	-jenkins dashboard
+		--> manage jenkins --> manage plugin
+		Available|installed --> search for "github integration"
+			-install without restart
+		Available|installed --> search for "publish over ssh"
+			-install without restart
+
+5. jenkins and Github ssh authentication configuration
+		-Jenkins master
+		#ssh-keygen
+		#cd /root/.ssh
+		#cat <filename>.pub
+			- copy the key then add to github ssh key
+		#ssh -T git@github.com  --> test the connection 
+		#cat <filenameof private key>
+			- copy the private key
+			- jenkins dashboard
+				-- manage jenkins --> credentials
+					--> system --> global credentials
+					--> add credential
+						 choose : ssh username with private key
+						 username: <your username>
+						 enter key directlry: Add ( past the copied private key)
+						 create
+6. Set IP address, username and password of webserver in jenkins for automated file transfer (publish over ssh)
+		- jenkins dashboard
+			-- manage jenkins
+			-- configure sytem
+			-- publish over ssh
+				ssh server --> Add
+					name: webserver
+					hostname: ip of webserver
+					username: root
+				(check)	use passwrod authentication ...
+					password: <webserver root password>
+					 
+
+7. Createing a job in jenkins to pull index.html from github repo. and send it to the webserver into /var/www/html directory
+		-jenkins dashboard
+			- New items (new jobs)
+			- Git : repo url -->username
+			- Build Trigger : Poll SCM --> * * * * *
+			- post build Action
+				-Send build artifact over ssh
+					-- ssh server : web server(Select server name)
+					-- Soruce file: index.html
+					-- remote directory: //var//www//html
+
+
+				
+			
+	
+
+
+
+
+
+
+
+ 

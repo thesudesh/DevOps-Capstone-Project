@@ -1,0 +1,94 @@
+Installing Docker Engine
+power on: 
+	- Dockear
+	- jmaster
+	- developer's
+
+1. Install dependent packages(found in native repository of centos)
+	#yum -y install device-mapper-persistent-data lvm2
+	
+
+2. install docker-ce package (container/docker Engine)
+	#cd /etc/yum.repos.d
+	#wget <search docker-ce repo in internet and paste it>
+	#wget https://download.docker.com/linux/centos/docker-ce.repo
+	#yum list docker-ce
+	#yum -y install docker-ce
+	#systemctl start docker
+	
+3. Typical Docker command 
+	#ping hub.doker.com
+  - To show/list all the docker image of an application
+	#docker search <Image or package name>
+	#docker search httpd
+  - To view the list of downloaded docker image
+	#docker image ls
+  - Location of locally downloaded docker images
+	#ls /var/lib/docker
+	#du -sh /var/lib/docker/*
+  - To download a docker Image from docker hub
+	#docker image pull <image name/image tag>
+	#docker image pull httpd
+  - To get details of a Docker Image
+	#docker image ls	--> display the docker images
+	#docker image inspect httpd:latest
+		-- port
+		-- working directory
+  - To create a container Downloading Image from Docker hub
+	#docker run -d --name <conintariner name> <image name>
+	#docker run -d --name webserver httpd
+  - To view the information of containers
+	#docker cointainer ls
+	#docker ps 		--> display only running cointeriner
+	#docker ps -a 		--> display all cointainers
+  - To start a container
+	#docker container start <container name>
+	#docker ps -a
+	#docker container start webserver
+  - Creating container exposing to a particular port
+	#docker run -d --name <container name> -p <docker host port>:<cointainer port> <docker image name>
+	#docker run -d --name httpserver -p 8080:80 httpd
+  - To login into container (running container)
+	#docker exec -i -t <container name> /bin/bash
+	workflow: Request --> physical ip --> container port --> Document Root --> working dir --> index.html 	
+  - To logout from the container
+	#exit
+  - To get info of container (to inspect the container)
+	#docker inspect <name>
+  - To stop running container
+	#docker cointainer stop <container name>
+	#docker cointainer stop httpserver
+	#docker cointainer start ttpserver
+  - To remove a cointainer
+	#docker rm <cointainer_name>
+	#docker rm httpserver
+	#docker ps -a
+  - To remove docker image
+	#docker rmi <image name>
+	#docker rmi httpd
+
+4 Creating a modified docker image
+  - Creating Docker file
+	--> This file contains info about docker base image to be downloaded and it is also contains modified docker image.
+	#mkdir /root/test
+	#cd /root/test
+	#vi Dockerfile		
+		#pulling base image
+		from tomcat:7.0.77-jre8
+		#maintainer info
+		maintainer "indra.ic@cab.edu.np"
+		#copy warfile into the container
+		copy ./javaweb.war  /usr/local/tomcat/webapps
+  - To download the image
+	#docker search tomat:7.0.77-jre8
+	#docker image pull tomat:7.0.77-jre8
+  - To build and tag the image from Dockerfile
+	#docker build -t <customimage name> <directory>
+	#docker build -t mytomcatimage .
+	#docker image ls
+  - Creating a container from the custom image
+	#docker run -d --name mytomcatserver -p 9090:8080 mytomcatimage
+	#docker cointainer ls
+	#docker exec -it mytomcatserver bash
+	#exit
+	- remove container and image
